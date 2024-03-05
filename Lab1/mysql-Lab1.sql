@@ -1,4 +1,5 @@
 create database mysql_labs;
+
 use mysql_labs;
 
 create table _level (
@@ -78,7 +79,7 @@ insert into stu_grades (stu_id, sub_id, exam_id, grade) values
 (1, 2, 1, 70),
 (2, 2, 1, 80),
 (3, 1, 1, 90),
-(3, 3, 1, 100);
+(3, 3, 1, 101);
 
 alter table student
 add column gender enum('male', 'female');
@@ -120,10 +121,16 @@ where gender = 'male' and dob < '1991-10-01';
 select * from student;
 
 -- Delete students whose score is lower than 50 in a particular subject exam
-select * from stu_grades;
-delete from stu_grades
-where sub_id = (select id from _subject where sub_name = 'oop') and grade < 50;
-select * from stu_grades;
+delete s
+from student s
+inner join (
+    select s.id
+    from student s join stu_grades g on s.id = g.stu_id
+    where g.sub_id = (select id from _subject where sub_name = 'oop') 
+    and g.grade < 50
+) as subquery on s.id = subquery.id;
+
+
 
 -- Write a query to get the student with the 3rd highest score in the database
 select s.stu_name
