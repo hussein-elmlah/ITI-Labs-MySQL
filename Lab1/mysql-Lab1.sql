@@ -130,6 +130,17 @@ inner join (
     and g.grade < 50
 ) as subquery on s.id = subquery.id;
 
+-- Delete students whose score is lower than 50 in a particular subject exam
+DELETE FROM student
+WHERE id IN (
+    SELECT s.id
+    FROM student s
+    JOIN stu_grades g ON s.id = g.stu_id
+    WHERE g.grade < 50
+    AND g.sub_id = (SELECT id FROM _subject WHERE sub_name = 'oop')
+);
+
+
 
 
 -- Write a query to get the student with the 3rd highest score in the database
